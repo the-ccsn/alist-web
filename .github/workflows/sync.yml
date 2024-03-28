@@ -1,0 +1,32 @@
+name: fetch origins
+on:
+  push:
+    branches: main
+  schedule:
+    - cron: 0 */48 * * * # 每隔48小时
+  workflow_dispatch:
+jobs:
+  fetch:
+    name: fetch origin
+    runs-on: ubuntu-latest
+    steps:
+      - name: fetch alist
+        uses: TobKed/github-forks-sync-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # 令牌
+          upstream_repository:  alist-org/alist-web # 上游仓库
+          target_repository: the-ccsn/alist-web # 你要推送的仓库
+          upstream_branch: main # 默认是拉取上游仓库的 master 分支
+          target_branch: origin # 默认推送到你的仓库 master 分支
+          force: false # 是否强制推送
+          tags: true # 确定是否使用 - tags
+      - name: push to deploy
+        uses: TobKed/github-forks-sync-action@master
+        with:
+          github_token: ${{ secrets.OVLER_SECRET }} # 令牌
+          upstream_repository:  the-ccsn/alist-web # 上游仓库
+          target_repository: Ovler-Young/alist-web # 你要推送的仓库
+          upstream_branch: main # 默认是拉取上游仓库的 master 分支
+          target_branch: deploy # 默认推送到你的仓库 master 分支
+          force: true # 是否强制推送
+          tags: true # 确定是否使用 - tags
