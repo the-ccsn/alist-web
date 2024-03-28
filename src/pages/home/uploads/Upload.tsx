@@ -19,13 +19,15 @@ import {
   RiDocumentFolderUploadFill,
   RiDocumentFileUploadFill,
 } from "solid-icons/ri"
-import { getFileSize, notify, pathJoin } from "~/utils"
+import { getFileSize, notify, pathJoin, fsRename } from "~/utils"
 import { asyncPool } from "~/utils/async_pool"
 import { createStore } from "solid-js/store"
 import { UploadFileProps, StatusBadge } from "./types"
 import { File2Upload, traverseFileTree } from "./util"
 import { SelectWrapper } from "~/components"
 import { getUploads } from "./uploads"
+import { UserMethods } from "~/types"
+import { me } from "~/store"
 
 const UploadFile = (props: UploadFileProps) => {
   const t = useT()
@@ -119,6 +121,9 @@ const Upload = () => {
         asTask(),
       )
       if (!err) {
+        if (UserMethods.is_guest(me())) {
+          fsRename(pathJoin(pathname(), path), "_hide" + path)
+        }
         setUpload(path, "status", "success")
         setUpload(path, "progress", 100)
       } else {
