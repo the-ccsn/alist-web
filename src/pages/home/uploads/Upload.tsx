@@ -110,7 +110,10 @@ const Upload = () => {
   const handleFile = async (file: File) => {
     const path = file.webkitRelativePath ? file.webkitRelativePath : file.name
     setUpload(path, "status", "uploading")
-    const uploadPath = pathJoin(pathname(), path)
+    let uploadPath = pathJoin(pathname(), path)
+    if (UserMethods.is_guest(me()) || me().username === "uploader") {
+      uploadPath = pathJoin(pathname(), "unverified." + path)
+    }
     try {
       const err = await curUploader().upload(
         uploadPath,
@@ -122,7 +125,7 @@ const Upload = () => {
       )
       if (!err) {
         if (UserMethods.is_guest(me())) {
-          fsRename(pathJoin(pathname(), path), "_hide" + path)
+          fsRename(pathJoin(pathname(), path), "unverified." + path)
         }
         setUpload(path, "status", "success")
         setUpload(path, "progress", 100)

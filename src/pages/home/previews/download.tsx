@@ -15,7 +15,7 @@ export const Download = (props: { openWith?: boolean }) => {
     const raw_url = objStore.raw_url
     console.log(raw_url)
     if (raw_url) {
-      const hide = raw_url.includes("_hide")
+      const hide = raw_url.includes("unverified.")
       console.log(`find hide: ${hide}`)
       return hide
     }
@@ -40,9 +40,9 @@ export const Download = (props: { openWith?: boolean }) => {
               let name = objStore.obj.name
               console.log(`path: ${path}`)
               console.log(`name: ${name}`)
-              fsRename(path, name.replace("_hide", ""))
+              fsRename(path, name.replace("unverified.", ""))
               // redirect to the new path
-              path = path.replace(name, name.replace("_hide", ""))
+              path = path.replace(name, name.replace("unverified.", ""))
               console.log(`new path: ${path}`)
               to(path)
             }}
