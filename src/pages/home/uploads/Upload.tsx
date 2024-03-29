@@ -111,7 +111,7 @@ const Upload = () => {
     const path = file.webkitRelativePath ? file.webkitRelativePath : file.name
     setUpload(path, "status", "uploading")
     let uploadPath = pathJoin(pathname(), path)
-    if (UserMethods.is_guest(me()) || me().username === "uploader") {
+    if (me().username === "uploader") {
       uploadPath = pathJoin(pathname(), "unverified." + path)
     }
     try {
@@ -124,9 +124,6 @@ const Upload = () => {
         asTask(),
       )
       if (!err) {
-        if (UserMethods.is_guest(me())) {
-          fsRename(pathJoin(pathname(), path), "unverified." + path)
-        }
         setUpload(path, "status", "success")
         setUpload(path, "progress", 100)
       } else {

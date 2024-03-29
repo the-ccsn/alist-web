@@ -5,6 +5,8 @@ import { FileInfo } from "./info"
 import { OpenWith } from "../file/open-with"
 import { Show } from "solid-js"
 import { fsRename, fsRemove } from "~/utils"
+import { me } from "~/store"
+import { UserMethods } from "~/types"
 export const Download = (props: { openWith?: boolean }) => {
   const t = useT()
   const { copyCurrentRawLink } = useCopyLink()
@@ -14,7 +16,7 @@ export const Download = (props: { openWith?: boolean }) => {
   const isRawHide = () => {
     const raw_url = objStore.raw_url
     console.log(raw_url)
-    if (raw_url) {
+    if (raw_url && UserMethods.is_admin(me())) {
       const hide = raw_url.includes("unverified.")
       console.log(`find hide: ${hide}`)
       return hide
@@ -76,7 +78,6 @@ export const Download = (props: { openWith?: boolean }) => {
           <Button as="a" href={objStore.raw_url} target="_blank">
             {t("home.preview.download")}
           </Button>
-          <rawHideButton />
         </HStack>
         <Show when={props.openWith}>
           <OpenWith />
