@@ -1,5 +1,5 @@
-// api and base_path both don't endsWith /
 import { changeApi } from "./request"
+// api and base_path both don't endsWith /
 
 export let base_path = ""
 export const setBasePath = (path: string) => {
