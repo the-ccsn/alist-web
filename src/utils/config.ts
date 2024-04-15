@@ -14,7 +14,16 @@ if (window.ALIST.base_path) {
   setBasePath(window.ALIST.base_path)
 }
 
-export let api = ""
+export let api = import.meta.env.VITE_API_URL as string
+if (window.ALIST.api) {
+  api = window.ALIST.api
+}
+if (api === "/") {
+  api = location.origin + base_path
+}
+if (api.endsWith("/")) {
+  api = api.slice(0, -1)
+}
 
 async function testApiSpeed(urls: string[]): Promise<string> {
   const startTime = new Date().getTime()
