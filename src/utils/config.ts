@@ -1,4 +1,5 @@
 // api and base_path both don't endsWith /
+import { changeApi } from "./request"
 
 export let base_path = ""
 export const setBasePath = (path: string) => {
@@ -61,9 +62,11 @@ async function initializeApi() {
   try {
     api = await testApiSpeed(apiUrls)
     console.log("Fastest API:", api)
+    changeApi(api)
   } catch (error) {
     console.error("Error selecting fastest API:", error)
     api = configuredApi
+    changeApi(api)
   }
 }
 

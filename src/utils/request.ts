@@ -1,8 +1,8 @@
 import axios from "axios"
-import { api, log } from "."
+import { log } from "."
 
 const instance = axios.create({
-  baseURL: api + "/api",
+  baseURL: (import.meta.env.VITE_API_URL as string) + "/api",
   // timeout: 5000
   headers: {
     "Content-Type": "application/json;charset=utf-8",
@@ -58,6 +58,10 @@ instance.defaults.headers.common["Authorization"] =
 export const changeToken = (token?: string) => {
   instance.defaults.headers.common["Authorization"] = token ?? ""
   localStorage.setItem("token", token ?? "")
+}
+
+export const changeApi = (url: string) => {
+  instance.defaults.baseURL = url + "/api"
 }
 
 export { instance as r }
