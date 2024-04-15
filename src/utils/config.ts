@@ -39,6 +39,7 @@ async function testApiSpeed(urls: string[]): Promise<string> {
   } catch (error) {
     console.error("Error testing API speed:", error)
   }
+  return api
 }
 
 async function initializeApi() {
