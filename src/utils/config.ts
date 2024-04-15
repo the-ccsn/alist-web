@@ -26,21 +26,19 @@ if (api.endsWith("/")) {
 }
 
 async function testApiSpeed(urls: string[]): Promise<string> {
-  const startTime = new Date().getTime()
-  const promises = urls.map((url) =>
-    fetch(url + "/api/public/settings", { method: "OPTIONS" }),
-  )
+  const promises = urls.map(async (url) => {
+    const startTime = new Date().getTime()
+    await fetch(url + "/api/public/settings", { method: "OPTIONS" })
+    const endTime = new Date().getTime()
+    return endTime - startTime
+  })
   try {
-    await Promise.all(promises)
+    const responseTimes = await Promise.all(promises)
+    const fastestIndex = responseTimes.indexOf(Math.min(...responseTimes))
+    return urls[fastestIndex]
   } catch (error) {
     console.error("Error testing API speed:", error)
   }
-
-  const endTime = new Date().getTime()
-  const responseTimes = urls.map((_, index) => endTime - startTime)
-  const fastestIndex = responseTimes.indexOf(Math.min(...responseTimes))
-
-  return urls[fastestIndex]
 }
 
 async function initializeApi() {
