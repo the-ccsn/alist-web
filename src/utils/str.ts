@@ -65,29 +65,31 @@ export const convertURL = (scheme: string, args: ConvertURLArgs) => {
     d.searchParams.set("alist_ts", ts.toString())
     args.d_url = d.toString()
   }
-  ans = ans.replace(/\$[eb_]*url/, (old) => {
-    const op = old.match(/[eb]/g)
+  ans = ans.replace(/\$([peb_]*)url/, (old, op) => {
     let u = args.raw_url
     if (op) {
-      for (const o of op.reverse()) {
+      for (const o of op.split("").reverse()) {
         if (o === "e") {
           u = encodeURIComponent(u)
         } else if (o === "b") {
           u = window.btoa(u)
+        } else if (o === "p") {
+          u = u.replace(/base\.319\.ccsn\.dev/, "base.ccsn.dev")
         }
       }
     }
     return u
   })
-  ans = ans.replace(/\$[eb_]*durl/, (old) => {
-    const op = old.match(/[eb]/g)
+  ans = ans.replace(/\$([peb_]*)durl/, (old, op) => {
     let u = args.d_url
     if (op) {
-      for (const o of op.reverse()) {
+      for (const o of op.split("").reverse()) {
         if (o === "e") {
           u = encodeURIComponent(u)
         } else if (o === "b") {
           u = window.btoa(u)
+        } else if (o === "p") {
+          u = u.replace(/base\.319\.ccsn\.dev/, "base.ccsn.dev")
         }
       }
     }
