@@ -13,7 +13,7 @@ jobs:
       - name: fetch alist
         uses: TobKed/github-forks-sync-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # 令牌
+          github_token: ${{ secrets.CCSN_SECRET }} # 令牌
           upstream_repository:  alist-org/alist-web # 上游仓库
           target_repository: the-ccsn/alist-web # 你要推送的仓库
           upstream_branch: main # 默认是拉取上游仓库的 master 分支
