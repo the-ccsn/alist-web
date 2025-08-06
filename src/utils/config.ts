@@ -19,6 +19,10 @@ export let api = import.meta.env.VITE_API_URL as string
 if (window.ALIST.api) {
   api = window.ALIST.api
 }
+// Take the first API URL if comma-separated
+if (api.includes(",")) {
+  api = api.split(",")[0].trim()
+}
 if (api === "/") {
   api = location.origin + base_path
 }
@@ -50,16 +54,19 @@ async function initializeApi() {
   }
 
   // Split configured API by comma and trim spaces
-  const configuredApis = configuredApi.split(",").map((api) => {
-    let trimmedApi = api.trim()
-    if (trimmedApi === "/") {
-      trimmedApi = location.origin + base_path
-    }
-    if (trimmedApi.endsWith("/")) {
-      trimmedApi = trimmedApi.slice(0, -1)
-    }
-    return trimmedApi
-  })
+  const configuredApis = configuredApi
+    .split(",")
+    .map((api) => {
+      let trimmedApi = api.trim()
+      if (trimmedApi === "/") {
+        trimmedApi = location.origin + base_path
+      }
+      if (trimmedApi.endsWith("/")) {
+        trimmedApi = trimmedApi.slice(0, -1)
+      }
+      return trimmedApi
+    })
+    .filter((url) => url.length > 0) // Filter out empty URLs
 
   const apiUrls = configuredApis.length > 0 ? configuredApis : [api]
 
@@ -69,7 +76,7 @@ async function initializeApi() {
     changeApi(api)
   } catch (error) {
     console.error("Error selecting fastest API:", error)
-    api = configuredApis[0] // Use first configured API as fallback
+    api = configuredApis[0] || api // Use first configured API as fallback, or current api if none
     changeApi(api)
   }
 }
