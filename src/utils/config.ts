@@ -1,13 +1,6 @@
 import { changeApi } from "./request"
+import { getFirstApiUrl } from "./url"
 // api and base_path both don't endsWith /
-
-// Helper function to get the first API URL from comma-separated string
-export const getFirstApiUrl = (apiUrl: string): string => {
-  if (apiUrl.includes(",")) {
-    return apiUrl.split(",")[0].trim()
-  }
-  return apiUrl
-}
 
 export let base_path = ""
 export const setBasePath = (path: string) => {

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { log } from "."
-import { getFirstApiUrl } from "./config"
+import { getFirstApiUrl } from "./url"
 
 const instance = axios.create({
   baseURL: getFirstApiUrl(import.meta.env.VITE_API_URL as string) + "/api",
