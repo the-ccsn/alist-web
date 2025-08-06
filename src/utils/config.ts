@@ -48,16 +48,20 @@ async function initializeApi() {
   if (window.ALIST.api) {
     configuredApi = window.ALIST.api
   }
-  if (configuredApi === "/") {
-    configuredApi = location.origin + base_path
-  }
-  if (configuredApi.endsWith("/")) {
-    configuredApi = configuredApi.slice(0, -1)
-  }
 
-  const internalApi = "https://base.319.ccsn.dev"
-  const publicApi = "https://base.ccsn.dev"
-  const apiUrls = [...new Set([internalApi, publicApi, configuredApi])]
+  // Split configured API by comma and trim spaces
+  const configuredApis = configuredApi.split(",").map((api) => {
+    let trimmedApi = api.trim()
+    if (trimmedApi === "/") {
+      trimmedApi = location.origin + base_path
+    }
+    if (trimmedApi.endsWith("/")) {
+      trimmedApi = trimmedApi.slice(0, -1)
+    }
+    return trimmedApi
+  })
+
+  const apiUrls = configuredApis.length > 0 ? configuredApis : [api]
 
   try {
     api = await testApiSpeed(apiUrls)
@@ -65,7 +69,7 @@ async function initializeApi() {
     changeApi(api)
   } catch (error) {
     console.error("Error selecting fastest API:", error)
-    api = configuredApi
+    api = configuredApis[0] // Use first configured API as fallback
     changeApi(api)
   }
 }
