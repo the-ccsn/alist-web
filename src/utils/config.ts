@@ -1,6 +1,14 @@
 import { changeApi } from "./request"
 // api and base_path both don't endsWith /
 
+// Helper function to get the first API URL from comma-separated string
+export const getFirstApiUrl = (apiUrl: string): string => {
+  if (apiUrl.includes(",")) {
+    return apiUrl.split(",")[0].trim()
+  }
+  return apiUrl
+}
+
 export let base_path = ""
 export const setBasePath = (path: string) => {
   base_path = path
@@ -15,13 +23,9 @@ if (window.ALIST.base_path) {
   setBasePath(window.ALIST.base_path)
 }
 
-export let api = import.meta.env.VITE_API_URL as string
+export let api = getFirstApiUrl(import.meta.env.VITE_API_URL as string)
 if (window.ALIST.api) {
-  api = window.ALIST.api
-}
-// Take the first API URL if comma-separated
-if (api.includes(",")) {
-  api = api.split(",")[0].trim()
+  api = getFirstApiUrl(window.ALIST.api)
 }
 if (api === "/") {
   api = location.origin + base_path
@@ -54,19 +58,16 @@ async function initializeApi() {
   }
 
   // Split configured API by comma and trim spaces
-  const configuredApis = configuredApi
-    .split(",")
-    .map((api) => {
-      let trimmedApi = api.trim()
-      if (trimmedApi === "/") {
-        trimmedApi = location.origin + base_path
-      }
-      if (trimmedApi.endsWith("/")) {
-        trimmedApi = trimmedApi.slice(0, -1)
-      }
-      return trimmedApi
-    })
-    .filter((url) => url.length > 0) // Filter out empty URLs
+  const configuredApis = configuredApi.split(",").map((api) => {
+    let trimmedApi = api.trim()
+    if (trimmedApi === "/") {
+      trimmedApi = location.origin + base_path
+    }
+    if (trimmedApi.endsWith("/")) {
+      trimmedApi = trimmedApi.slice(0, -1)
+    }
+    return trimmedApi
+  })
 
   const apiUrls = configuredApis.length > 0 ? configuredApis : [api]
 

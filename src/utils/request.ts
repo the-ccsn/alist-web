@@ -1,8 +1,9 @@
 import axios from "axios"
 import { log } from "."
+import { getFirstApiUrl } from "./config"
 
 const instance = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL as string) + "/api",
+  baseURL: getFirstApiUrl(import.meta.env.VITE_API_URL as string) + "/api",
   // timeout: 5000
   headers: {
     "Content-Type": "application/json;charset=utf-8",
