@@ -201,10 +201,9 @@ const AddOrEdit = () => {
                       <SelectOption
                         value={role.id}
                         onClick={() => {
-                          // 单选逻辑：如果已选中则移除，否则替换为当前选择
                           const newRoles = user.role.includes(role.id)
                             ? user.role.filter((id) => id !== role.id)
-                            : [role.id] // 只保留当前选择的角色
+                            : [...user.role, role.id]
                           setUser("role", newRoles)
                         }}
                       >
